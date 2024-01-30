@@ -31,6 +31,18 @@ def decode_bencoded_list(bencoded_string):
             i += 1
     return true_list
 
+def decode_bencoded_dictionary(bencoded_string):
+    true_dictionary = {}
+    decoded_string_in_list = decode_bencoded_list(bencoded_string)
+    for a in range(len(decoded_string_in_list)):
+        if a%2 == 0:
+            true_dictionary[decoded_string_in_list[a]] = decoded_string_in_list[a+1]
+            a += 1
+        if a == len(decoded_string_in_list)-1 and (len(decoded_string_in_list)-1)%2 == 0:
+            true_dictionary[decoded_string_in_list[a]] = None
+        else:
+            continue
+    return true_dictionary
 def main():
     if len(sys.argv) < 2:
         print("Usage: python script.py <message1> <message2> ...")
@@ -43,7 +55,8 @@ def main():
         decoded_string = decode_bencoded_integer(bencoded_string)
     elif bencoded_string[0] == 'l':
         decoded_string = decode_bencoded_list(bencoded_string)
-
+    elif bencoded_string[0] == 'd':
+        decoded_string = decode_bencoded_dictionary(bencoded_string)
     print("Received message:",decoded_string)
 
 if __name__ == "__main__":
