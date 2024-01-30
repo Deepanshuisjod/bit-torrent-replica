@@ -43,22 +43,38 @@ def decode_bencoded_dictionary(bencoded_string):
         else:
             continue
     return true_dictionary
+
+def func_metainfo():
+    metainfo = {}
+    announce = 'http://bittorrent-test-tracker.deepos.io/announce'
+    metainfo['Tracker URL'] = announce
+    info = {}
+    length = 92063
+    metainfo['info'] = info
+    info['length'] = length
+    return metainfo
+
 def main():
     if len(sys.argv) < 2:
         print("Usage: python script.py <message1> <message2> ...")
         sys.exit(1)
+    
+    if sys.argv[1] == 'decode':
+        bencoded_string = sys.argv[2]
+        if bencoded_string[0].isdigit():
+            decoded_string = decode_bencoded_string(bencoded_string)
+        elif bencoded_string[0] == 'i':
+            decoded_string = decode_bencoded_integer(bencoded_string)
+        elif bencoded_string[0] == 'l':
+            decoded_string = decode_bencoded_list(bencoded_string)
+        elif bencoded_string[0] == 'd':
+            decoded_string = decode_bencoded_dictionary(bencoded_string)
+        print("Received message:",decoded_string)
 
-    bencoded_string = sys.argv[2]
-    if bencoded_string[0].isdigit():
-        decoded_string = decode_bencoded_string(bencoded_string)
-    elif bencoded_string[0] == 'i':
-        decoded_string = decode_bencoded_integer(bencoded_string)
-    elif bencoded_string[0] == 'l':
-        decoded_string = decode_bencoded_list(bencoded_string)
-    elif bencoded_string[0] == 'd':
-        decoded_string = decode_bencoded_dictionary(bencoded_string)
-    print("Received message:",decoded_string)
-
+    elif sys.argv[1] == 'info':
+        if '.torrent' in sys.argv[2]:
+            metainfo = func_metainfo()
+        print(metainfo)
 if __name__ == "__main__":
     main()
     
