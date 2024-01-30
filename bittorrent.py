@@ -1,4 +1,6 @@
 import sys
+import hashlib
+
 true_value = None
 
 def decode_bencoded_string(bencoded_string):
@@ -52,7 +54,11 @@ def func_metainfo():
     length = 92063
     metainfo['info'] = info
     info['length'] = length
-    return metainfo
+    sorted_str = str(sorted(metainfo.items()))
+    sha1_hash = hashlib.sha1()
+    sha1_hash.update(sorted_str.encode('utf-8'))
+    infohash = sha1_hash.hexdigest()
+    return metainfo ,infohash
 
 def main():
     if len(sys.argv) < 2:
@@ -73,8 +79,8 @@ def main():
 
     elif sys.argv[1] == 'info':
         if '.torrent' in sys.argv[2]:
-            metainfo = func_metainfo()
-        print(metainfo)
+            metainfo , infohash = func_metainfo()
+        print(metainfo,'Info hash :',infohash)
 if __name__ == "__main__":
     main()
     
