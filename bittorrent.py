@@ -1,5 +1,6 @@
 import sys
 import hashlib
+import json
 
 true_value = None
 class decode_bencoded:
@@ -19,9 +20,10 @@ class decode_bencoded:
         true_list = []
         i = 1
         while i < len(bencoded_string):
-            if bencoded_string[i].isdigit():
-                length = int(bencoded_string[i:i + bencoded_string[i:].index(':')])
-                element = self.string_(bencoded_string[i:i + length + 2])
+            if chr(bencoded_string[i]).isdigit():
+                length = bencoded_string[i:i + bencoded_string[i]]
+                j = i + length + 2
+                element = self.string_(bencoded_string[i:j])
                 true_list.append(element)
                 i += length + 2
             elif bencoded_string[i] == 'i':
@@ -80,7 +82,7 @@ def main():
                 decoded_value = decoded_value.string_(bencoded_string)
             elif chr(bencoded_string[0]) == 'i':
                 decoded_value = decoded_value.integer_(bencoded_string)
-            elif bencoded_string[0] == 'l':
+            elif chr(bencoded_string[0]) == 'l':
                 decoded_value = decoded_value.list_(bencoded_string)
             elif bencoded_string[0] == 'd':
                 decoded_value = decoded_value.dictionary_(bencoded_string)
